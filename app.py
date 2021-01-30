@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///weather.db'
 
@@ -25,14 +26,14 @@ def index():
 
     cities = City.query.all()
 
-    url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=271d1234d3f497eed5b1d80a07b3fcd1'
+    url = 'http://api.openweathermap.org/data/2.5/weather?q={}&units=imperial&appid=6171e6c5f4efb2af1618269d15191bfa'
 
     weather_data = []
 
     for city in cities:
 
         r = requests.get(url.format(city.name)).json()
-        print(r)
+        # print(r)
 
         weather = {
             'city' : city.name,
@@ -46,3 +47,7 @@ def index():
 
 
     return render_template('weather.html', weather_data=weather_data)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
